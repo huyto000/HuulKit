@@ -1,0 +1,6 @@
+services:
+  kotlinproject:
+    image: kotlinproject
+    build:
+      context: .
+      dockerfile: ./Dockerfile

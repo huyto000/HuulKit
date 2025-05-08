@@ -1,0 +1,11 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "command": "./gradlew composeApp:run",
+            "name": "Run Desktop App",
+            "request": "launch",
+            "type": "node-terminal"
+          }
+    ]
+}

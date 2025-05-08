@@ -1,0 +1,123 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Kotlin Compose Multiplatform Development Guide
+
+This guide outlines best practices for developing, running, and deploying Kotlin Multiplatform applications using Compose Multiplatform.
+
+## Development Best Practices
+
+### 1. Project Structure
+A typical Kotlin Multiplatform project with Compose is structured with source sets for common and platform-specific code:
+- `commonMain`: Contains shared Kotlin code, including common business logic and Compose UI.
+- `androidMain`: Android-specific code and resources. Utilizes `MainActivity.kt` to host Compose UI.
+- `iosMain`: iOS-specific code. Often involves an `UIViewController` to host Compose UI.
+- `desktopMain`: Desktop (JVM) specific code. Typically has a `main.kt` to launch the application window.
+- `jsMain` (Optional): For targeting Web with Kotlin/JS and Compose for Web.
+
+Refer to your `[build.gradle.kts](mdc:build.gradle.kts)` (or `build.gradle`) and `[settings.gradle.kts](mdc:settings.gradle.kts)` for module definitions and dependencies.
+
+### 2. Dependency Management
+- Use Gradle for dependency management. Define versions for Kotlin, Compose Multiplatform, and other libraries in a centralized place, often `gradle.properties` or a version catalog (`libs.versions.toml`).
+- Keep your Kotlin and Compose Multiplatform versions up-to-date to leverage the latest features and bug fixes.
+- Example dependencies in `commonMain`'s `build.gradle.kts`:
+  ```kotlin
+  kotlin {
+      sourceSets {
+          commonMain.dependencies {
+              implementation(compose.runtime)
+              implementation(compose.foundation)
+              implementation(compose.material)
+              // Add other common dependencies
+          }
+      }
+  }
+  ```
+
+### 3. Code Style and Conventions
+- Follow the official [Kotlin Coding Conventions](mdc:https:/kotlinlang.org/docs/coding-conventions.html).
+- Use a linter/formatter like `ktlint` to maintain consistent code style.
+- Write clear, concise, and well-documented code.
+
+### 4. Compose Multiplatform
+- Design UI components in `commonMain` to maximize code sharing.
+- Use `expect`/`actual` declarations for platform-specific UI elements or functionalities if needed.
+- Leverage Compose Previews for rapid UI development and iteration, especially in Android Studio.
+
+### 5. Testing
+- **Unit Tests**: Write unit tests for your business logic in `commonTest`. Use frameworks like KotlinTest or JUnit.
+- **UI Tests**:
+    - **Android**: Use Espresso or UI Automator.
+    - **Desktop**: Consider libraries that can interact with Swing/AWT components if needed, or focus on testing ViewModels.
+    - **iOS**: Use XCTest.
+- Aim for good test coverage across all modules.
+
+### 6. Version Control
+- Use Git for version control.
+- Follow a consistent branching strategy (e.g., Gitflow).
+- Write clear and descriptive commit messages.
+
+## Running the Application
+
+### Android
+- **Android Studio**: Open the project in Android Studio. Select the `androidApp` configuration and run on an emulator or physical device.
+- **Gradle**: `./gradlew :androidApp:installDebug` (or `assembleDebug`) and then launch manually.
+
+### iOS
+- **Xcode**:
+    1. Build the shared framework: `./gradlew :shared:packForXcode` (or a similar task defined in your project).
+    2. Open the Xcode project located typically in `iosApp/iosApp.xcworkspace`.
+    3. Select a simulator or connected device and run.
+- Ensure your Kotlin/Native and Xcode configurations are compatible.
+
+### Desktop (JVM)
+- **Gradle**: Run the `run` task for your desktop module: `./gradlew :desktopApp:run` (the module name might vary).
+- The output is typically a runnable JAR.
+
+### Web (Kotlin/JS with Compose for Web) - If applicable
+- **Gradle**: `./gradlew :jsApp:jsBrowserDevelopmentRun` or similar tasks for running in a development server.
+- Open the specified URL (usually `http://localhost:8080`) in a browser.
+
+## Deployment
+
+### Android
+- **App Bundle (.aab) or APK (.apk)**:
+    - `./gradlew :androidApp:bundleRelease` for an App Bundle.
+    - `./gradlew :androidApp:assembleRelease` for an APK.
+- Sign your app with a release key.
+- Upload to the Google Play Store.
+
+### iOS
+- **IPA File**:
+    1. Archive the app in Xcode.
+    2. Distribute through TestFlight for testing or submit to the App Store Connect.
+- Ensure all provisioning profiles and certificates are correctly configured.
+
+### Desktop (JVM)
+- **Executable JAR**: `./gradlew :desktopApp:jar` or a custom distribution task.
+- **Platform-specific installers**: Use tools like `jpackage` (part of JDK) or third-party libraries (e.g., Conveyor by Hydraulic) to create `.dmg` (macOS), `.msi` (Windows), or `.deb`/`.rpm` (Linux) installers.
+  - Example Gradle task using `compose.desktop.application` plugin for packaging:
+    ```kotlin
+    // In desktopApp/build.gradle.kts
+    compose.desktop {
+        application {
+            mainClass = "com.example.MainKt" // Your main class
+            nativeDistributions {
+                targetFormats(org.jetbrains.compose.desktop.application.dsl.TargetFormat.Dmg, org.jetbrains.compose.desktop.application.dsl.TargetFormat.Msi, org.jetbrains.compose.desktop.application.dsl.TargetFormat.Deb)
+                packageName = "YourAppName"
+                version = "1.0.0"
+            }
+        }
+    }
+    ```
+    Run `./gradlew :desktopApp:packageDmg` (or other formats).
+
+### Web (Kotlin/JS with Compose for Web) - If applicable
+- **Static Files**: `./gradlew :jsApp:jsBrowserDistribution` or a similar task to build optimized static files (HTML, JS, CSS).
+- Deploy these files to any static web hosting service (e.g., GitHub Pages, Netlify, Vercel, AWS S3).
+
+---
+*This rule provides general guidelines. Specific project configurations might vary. Always refer to the official documentation for Kotlin, Compose Multiplatform, and target platform tools.*
+
