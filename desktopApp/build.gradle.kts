@@ -46,8 +46,10 @@ compose.desktop {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
             packageName = "Huulkit"
             packageVersion = "1.0.0"
-            // TODO: Add an icon, e.g.:
-            // iconFile.set(project.file("src/main/resources/icon.png"))
+            // Set application icon
+            windows {
+                iconFile.set(project.file("src/main/resources/icon.png"))
+            }
         }
     }
 }
