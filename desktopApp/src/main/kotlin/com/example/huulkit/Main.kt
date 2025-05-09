@@ -12,18 +12,18 @@ import androidx.compose.ui.window.WindowPosition
 import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
-import com.example.huulkit.ui.HuulkitApp
+import com.example.huulkit.presentation.ui.HuulkitApp
 
 fun main() = application {
     val windowState = rememberWindowState(
         size = DpSize(800.dp, 700.dp),
         position = WindowPosition(Alignment.Center)
     )
-    
+
     val trayState = rememberTrayState()
     val isVisible = remember { mutableStateOf(true) }
     val icon = painterResource("icon.png")
-    
+
     // Set up system tray
     SystemTrayManager.createTray(
         this,
@@ -31,7 +31,7 @@ fun main() = application {
         windowVisibility = isVisible,
         onExitRequest = ::exitApplication
     )
-    
+
     // Show notification when minimized to tray
     if (!isVisible.value) {
         SystemTrayManager.showNotification(
