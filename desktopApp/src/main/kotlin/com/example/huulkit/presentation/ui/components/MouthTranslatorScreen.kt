@@ -23,6 +23,8 @@ import androidx.compose.ui.unit.dp
 import com.example.huulkit.ai.Language
 import com.example.huulkit.presentation.theme.HuulkitBlue
 import com.example.huulkit.presentation.viewmodel.TranslatorViewModel
+import java.awt.Toolkit
+import java.awt.datatransfer.StringSelection
 
 /**
  * Screen for the Mouth Translator tab
@@ -84,20 +86,39 @@ fun MouthTranslatorScreen(
                     }
                 }
 
-                OutlinedTextField(
-                    value = viewModel.englishText,
-                    onValueChange = { viewModel.updateEnglishText(it) },
-                    label = { Text("Enter English text") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 100.dp, max = 150.dp)
-                        .focusRequester(englishFocusRequester)
-                        .onFocusChanged { focusState ->
-                            if (focusState.isFocused) {
-                                viewModel.updateFocusedLanguage(Language.ENGLISH)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.englishText,
+                        onValueChange = { viewModel.updateEnglishText(it) },
+                        label = { Text("Enter English text") },
+                        enabled = !viewModel.isEnglishLoading,
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = 100.dp, max = 150.dp)
+                            .focusRequester(englishFocusRequester)
+                            .onFocusChanged { focusState ->
+                                if (focusState.isFocused) {
+                                    viewModel.updateFocusedLanguage(Language.ENGLISH)
+                                }
                             }
-                        }
-                )
+                    )
+                    
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
+                    Button(
+                        onClick = { copyToClipboard(viewModel.englishText) },
+                        enabled = viewModel.englishText.isNotBlank(),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = HuulkitBlue.copy(alpha = 0.8f)
+                        ),
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    ) {
+                        Text("Copy")
+                    }
+                }
             }
 
             // Swedish text area
@@ -129,20 +150,39 @@ fun MouthTranslatorScreen(
                     }
                 }
 
-                OutlinedTextField(
-                    value = viewModel.swedishText,
-                    onValueChange = { viewModel.updateSwedishText(it) },
-                    label = { Text("Enter Swedish text") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 100.dp, max = 150.dp)
-                        .focusRequester(swedishFocusRequester)
-                        .onFocusChanged { focusState ->
-                            if (focusState.isFocused) {
-                                viewModel.updateFocusedLanguage(Language.SWEDISH)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.swedishText,
+                        onValueChange = { viewModel.updateSwedishText(it) },
+                        label = { Text("Enter Swedish text") },
+                        enabled = !viewModel.isSwedishLoading,
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = 100.dp, max = 150.dp)
+                            .focusRequester(swedishFocusRequester)
+                            .onFocusChanged { focusState ->
+                                if (focusState.isFocused) {
+                                    viewModel.updateFocusedLanguage(Language.SWEDISH)
+                                }
                             }
-                        }
-                )
+                    )
+                    
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
+                    Button(
+                        onClick = { copyToClipboard(viewModel.swedishText) },
+                        enabled = viewModel.swedishText.isNotBlank(),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = HuulkitBlue.copy(alpha = 0.8f)
+                        ),
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    ) {
+                        Text("Copy")
+                    }
+                }
             }
 
             // Vietnamese text area
@@ -174,20 +214,39 @@ fun MouthTranslatorScreen(
                     }
                 }
 
-                OutlinedTextField(
-                    value = viewModel.vietnameseText,
-                    onValueChange = { viewModel.updateVietnameseText(it) },
-                    label = { Text("Enter Vietnamese text") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .heightIn(min = 100.dp, max = 150.dp)
-                        .focusRequester(vietnameseFocusRequester)
-                        .onFocusChanged { focusState ->
-                            if (focusState.isFocused) {
-                                viewModel.updateFocusedLanguage(Language.VIETNAMESE)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    OutlinedTextField(
+                        value = viewModel.vietnameseText,
+                        onValueChange = { viewModel.updateVietnameseText(it) },
+                        label = { Text("Enter Vietnamese text") },
+                        enabled = !viewModel.isVietnameseLoading,
+                        modifier = Modifier
+                            .weight(1f)
+                            .heightIn(min = 100.dp, max = 150.dp)
+                            .focusRequester(vietnameseFocusRequester)
+                            .onFocusChanged { focusState ->
+                                if (focusState.isFocused) {
+                                    viewModel.updateFocusedLanguage(Language.VIETNAMESE)
+                                }
                             }
-                        }
-                )
+                    )
+                    
+                    Spacer(modifier = Modifier.width(8.dp))
+                    
+                    Button(
+                        onClick = { copyToClipboard(viewModel.vietnameseText) },
+                        enabled = viewModel.vietnameseText.isNotBlank(),
+                        colors = ButtonDefaults.buttonColors(
+                            backgroundColor = HuulkitBlue.copy(alpha = 0.8f)
+                        ),
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    ) {
+                        Text("Copy")
+                    }
+                }
             }
 
             // Translate button
@@ -223,4 +282,13 @@ fun MouthTranslatorScreen(
             adapter = rememberScrollbarAdapter(translatorScrollState)
         )
     }
+}
+
+/**
+ * Copies the given text to the system clipboard
+ */
+private fun copyToClipboard(text: String) {
+    val selection = StringSelection(text)
+    val clipboard = Toolkit.getDefaultToolkit().systemClipboard
+    clipboard.setContents(selection, null)
 }
