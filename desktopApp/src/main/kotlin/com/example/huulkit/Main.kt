@@ -13,8 +13,15 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberTrayState
 import androidx.compose.ui.window.rememberWindowState
 import com.example.huulkit.presentation.ui.HuulkitApp
+import com.example.huulkit.di.appModule
+import org.koin.core.context.startKoin
 
 fun main() = application {
+    // Initialize Koin
+    startKoin {
+        modules(appModule)
+    }
+
     val windowState = rememberWindowState(
         size = DpSize(800.dp, 700.dp),
         position = WindowPosition(Alignment.Center)

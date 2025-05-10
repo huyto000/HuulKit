@@ -8,11 +8,14 @@ import dev.langchain4j.service.UserMessage
 import dev.langchain4j.service.V
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 /**
  * Service for text refinement using Google's Gemini model
  */
-object GeminiService {
+class GeminiService : KoinComponent {
+    private val model: GoogleAiGeminiChatModel by inject()
     
     /**
      * Checks if the Gemini API key is configured
@@ -34,13 +37,6 @@ object GeminiService {
             if (!isConfigured()) {
                 return@withContext Result.failure(Exception("Gemini API key not configured"))
             }
-            
-            val apiKey = ConfigManager.getGeminiApiKey()
-            val model = GoogleAiGeminiChatModel.builder()
-                .apiKey(apiKey)
-                .modelName("gemini-2.0-flash")
-                .temperature(1.0)
-                .build()
             
             val textRefiner = AiServices.builder(TextRefiner::class.java)
                 .chatModel(model)

@@ -1,5 +1,6 @@
 package com.example.huulkit.presentation.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.selection.selectable
@@ -35,22 +36,17 @@ fun NavigationSidebar(
             .selectableGroup()
             .padding(top = 16.dp)
     ) {
-        // App logo and title
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+        // App logo
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            contentAlignment = Alignment.Center
         ) {
-            Icon(
+            Image(
                 painter = painterResource("icon.png"),
                 contentDescription = "Huulkit Logo",
-                modifier = Modifier.size(24.dp).padding(end = 8.dp),
-                tint = Color.White
-            )
-            Text(
-                "Huulkit",
-                color = Color.White,
-                style = MaterialTheme.typography.h6,
-                fontWeight = FontWeight.Bold
+                modifier = Modifier.size(96.dp)
             )
         }
         

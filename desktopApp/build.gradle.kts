@@ -14,6 +14,7 @@ val composeVersion = "1.6.10"
 val langchain4jVersion = "1.0.0-rc1"
 val kotlinxCoroutinesVersion = "1.8.0"
 val kotlinxSerializationVersion = "1.6.3"
+val koinVersion = "4.0.4"
 
 repositories {
     mavenCentral()
@@ -37,6 +38,10 @@ dependencies {
 
     // Gemini model integration
     implementation("dev.langchain4j:langchain4j-google-ai-gemini:1.0.0-beta4")
+
+    // Koin
+    implementation("io.insert-koin:koin-core:$koinVersion")
+    implementation("io.insert-koin:koin-compose:$koinVersion")
 }
 
 compose.desktop {
