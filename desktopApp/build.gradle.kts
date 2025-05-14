@@ -42,6 +42,10 @@ dependencies {
     // Koin
     implementation("io.insert-koin:koin-core:$koinVersion")
     implementation("io.insert-koin:koin-compose:$koinVersion")
+
+    // Logging
+    implementation("org.slf4j:slf4j-api:2.0.12")
+    implementation("ch.qos.logback:logback-classic:1.5.3")
 }
 
 compose.desktop {

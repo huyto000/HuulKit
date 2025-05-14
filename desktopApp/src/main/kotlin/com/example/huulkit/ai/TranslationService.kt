@@ -8,6 +8,7 @@ import dev.langchain4j.service.UserMessage
 import dev.langchain4j.service.V
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.slf4j.LoggerFactory
 
 /**
  * Enum representing supported languages for translation
@@ -22,15 +23,19 @@ enum class Language(val displayName: String) {
  * Service for translating text between languages using Google's Gemini model
  */
 object TranslationService {
-    
+    private val logger = LoggerFactory.getLogger(TranslationService::class.java)
+
     /**
      * Checks if the Gemini API key is configured
      */
     fun isConfigured(): Boolean {
+        logger.debug("Checking if Gemini API key is configured for translation")
         val apiKey = ConfigManager.getGeminiApiKey()
-        return apiKey.isNotBlank()
+        val isConfigured = apiKey.isNotBlank()
+        logger.debug("Gemini API key configured for translation: {}", isConfigured)
+        return isConfigured
     }
-    
+
     /**
      * Translates text from source language to target language using Gemini
      * 
@@ -44,37 +49,48 @@ object TranslationService {
         sourceLanguage: Language, 
         targetLanguage: Language
     ): Result<String> = withContext(Dispatchers.IO) {
+        logger.info("Translating text from {} to {}", sourceLanguage.displayName, targetLanguage.displayName)
+        logger.debug("Text length: {}", text.length)
+
         try {
             if (!isConfigured()) {
+                logger.error("Cannot translate text: Gemini API key not configured")
                 return@withContext Result.failure(Exception("Gemini API key not configured"))
             }
-            
+
             if (text.isBlank()) {
+                logger.debug("Text is blank, returning empty result")
                 return@withContext Result.success("")
             }
-            
+
+            logger.debug("Initializing Gemini model for translation")
             val apiKey = ConfigManager.getGeminiApiKey()
             val model = GoogleAiGeminiChatModel.builder()
                 .apiKey(apiKey)
                 .modelName("gemini-2.0-flash")
                 .temperature(1.0) // Lower temperature for more accurate translations
                 .build()
-            
+
+            logger.debug("Creating translator with Gemini model")
             val translator = AiServices.builder(TextTranslator::class.java)
                 .chatModel(model)
                 .build()
-            
+
+            logger.info("Calling Gemini API to translate text")
             val translatedText = translator.translateText(
                 text, 
                 sourceLanguage.displayName, 
                 targetLanguage.displayName
             )
+            logger.info("Translation successful")
+            logger.debug("Translated text length: {}", translatedText.length)
             Result.success(translatedText)
         } catch (e: Exception) {
+            logger.error("Error translating text with Gemini API: {}", e.message, e)
             Result.failure(Exception("Error with Gemini API: ${e.message}", e))
         }
     }
-    
+
     /**
      * Interface for the AI service to translate text
      */
@@ -85,9 +101,9 @@ object TranslationService {
                 "Only return the translated text, without quotes, explanation, or other commentary.")
         @UserMessage("""
             Translate the following text from {{sourceLanguage}} to {{targetLanguage}}:
-            
+
             {{text}}
-            
+
             Return only the translated text without any explanations, quotes or additional commentary.
         """)
         fun translateText(
