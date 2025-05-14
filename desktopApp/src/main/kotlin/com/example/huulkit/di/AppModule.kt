@@ -3,7 +3,9 @@ package com.example.huulkit.di
 import com.example.huulkit.ai.GeminiService
 import com.example.huulkit.data.repository.ConfigRepositoryImpl
 import com.example.huulkit.data.repository.TextRefinementRepositoryImpl
+import com.example.huulkit.data.source.ConfigDataSource
 import com.example.huulkit.data.source.ConfigDataSourceImpl
+import com.example.huulkit.data.source.TextRefinementDataSource
 import com.example.huulkit.data.source.TextRefinementDataSourceImpl
 import com.example.huulkit.domain.repository.ConfigRepository
 import com.example.huulkit.domain.repository.TextRefinementRepository
@@ -25,25 +27,16 @@ val appModule = module {
     single { CoroutineScope(SupervisorJob() + Dispatchers.Default) }
 
     // Data sources
-    single { ConfigDataSourceImpl() }
-    single { TextRefinementDataSourceImpl() }
+    single<ConfigDataSource> { ConfigDataSourceImpl() }
 
     // Repositories
     single<ConfigRepository> { ConfigRepositoryImpl(get()) }
-    single<TextRefinementRepository> { TextRefinementRepositoryImpl(get()) }
 
     // Use cases
     single { GetGeminiApiKeyUseCase(get()) }
     single { UpdateGeminiApiKeyUseCase(get()) }
-    single { RefineTextUseCase(get()) }
 
-    // ViewModels
-    single { MainViewModel() }
-    single { ConfigViewModel(get(), get()) }
-    single { TextRefinementViewModel(get(), get()) }
-    single { TranslatorViewModel() }
-
-    // Gemini Chat Model
+    // Gemini Chat Model - depends on ConfigRepository
     single {
         GoogleAiGeminiChatModel.builder()
             .apiKey(get<ConfigRepository>().getGeminiApiKey())
@@ -52,6 +45,21 @@ val appModule = module {
             .build()
     }
 
-    // Services
+    // Services - depends on GoogleAiGeminiChatModel
     single { GeminiService() }
-} 
+
+    // Data sources - depends on GeminiService
+    single<TextRefinementDataSource> { TextRefinementDataSourceImpl() }
+
+    // Repositories - depends on TextRefinementDataSource
+    single<TextRefinementRepository> { TextRefinementRepositoryImpl(get()) }
+
+    // Use cases - depends on TextRefinementRepository
+    single { RefineTextUseCase(get()) }
+
+    // ViewModels
+    single { MainViewModel() }
+    single { ConfigViewModel(get(), get()) }
+    single { TextRefinementViewModel(get(), get()) }
+    single { TranslatorViewModel() }
+}

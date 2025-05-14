@@ -3,23 +3,27 @@ package com.example.huulkit.presentation.ui
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import com.example.huulkit.di.AppContainer
 import com.example.huulkit.presentation.theme.HuulkitTheme
 import com.example.huulkit.presentation.ui.components.ConfigDialog
 import com.example.huulkit.presentation.ui.components.MouthHelperScreen
 import com.example.huulkit.presentation.ui.components.MouthTranslatorScreen
 import com.example.huulkit.presentation.ui.components.NavigationSidebar
+import com.example.huulkit.presentation.viewmodel.ConfigViewModel
+import com.example.huulkit.presentation.viewmodel.MainViewModel
+import com.example.huulkit.presentation.viewmodel.TextRefinementViewModel
+import com.example.huulkit.presentation.viewmodel.TranslatorViewModel
+import org.koin.compose.koinInject
 
 /**
  * Main UI component for the Huulkit application
  */
 @Composable
 fun HuulkitApp() {
-    // Get view models from the AppContainer
-    val mainViewModel = AppContainer.mainViewModel
-    val textRefinementViewModel = AppContainer.textRefinementViewModel
-    val configViewModel = AppContainer.configViewModel
-    val translatorViewModel = AppContainer.translatorViewModel
+    // Get view models from Koin
+    val mainViewModel = koinInject<MainViewModel>()
+    val textRefinementViewModel = koinInject<TextRefinementViewModel>()
+    val configViewModel = koinInject<ConfigViewModel>()
+    val translatorViewModel = koinInject<TranslatorViewModel>()
 
     // Initialize the config view model
     LaunchedEffect(Unit) {
