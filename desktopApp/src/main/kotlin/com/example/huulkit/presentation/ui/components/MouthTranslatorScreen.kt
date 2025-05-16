@@ -23,8 +23,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.jetbrains.skia.Image as SkiaImage
 import java.io.ByteArrayInputStream
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -201,12 +199,9 @@ fun MouthTranslatorScreen(
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            // Local time
+                            // Local time for London
                             Text(
-                                if (viewModel.londonWeather.localTime.isNotEmpty()) 
-                                    viewModel.londonWeather.localTime 
-                                else 
-                                    LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+                                viewModel.londonLocalTime,
                                 style = MaterialTheme.typography.subtitle1,
                                 fontWeight = FontWeight.Bold
                             )
@@ -329,12 +324,9 @@ fun MouthTranslatorScreen(
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            // Local time
+                            // Local time for Stockholm
                             Text(
-                                if (viewModel.stockholmWeather.localTime.isNotEmpty()) 
-                                    viewModel.stockholmWeather.localTime 
-                                else 
-                                    LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+                                viewModel.stockholmLocalTime,
                                 style = MaterialTheme.typography.subtitle1,
                                 fontWeight = FontWeight.Bold
                             )
@@ -457,12 +449,9 @@ fun MouthTranslatorScreen(
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            // Local time
+                            // Local time for Hanoi
                             Text(
-                                if (viewModel.hanoiWeather.localTime.isNotEmpty()) 
-                                    viewModel.hanoiWeather.localTime 
-                                else 
-                                    LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm")),
+                                viewModel.hanoiLocalTime,
                                 style = MaterialTheme.typography.subtitle1,
                                 fontWeight = FontWeight.Bold
                             )

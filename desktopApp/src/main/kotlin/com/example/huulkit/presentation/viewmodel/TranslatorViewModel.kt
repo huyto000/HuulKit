@@ -12,6 +12,9 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 /**
  * ViewModel for translator operations
@@ -61,10 +64,35 @@ class TranslatorViewModel(
     var weatherApiKeyError by mutableStateOf(false)
         private set
 
+    // Current local times for each city
+    var londonLocalTime by mutableStateOf("")
+        private set
+
+    var stockholmLocalTime by mutableStateOf("")
+        private set
+
+    var hanoiLocalTime by mutableStateOf("")
+        private set
+
+    // For backward compatibility
+    var currentLocalTime by mutableStateOf("")
+        private set
+
+    // Time formatter
+    private val timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss")
+
+    // Timezone IDs for each city
+    private val londonZoneId = ZoneId.of("Europe/London")
+    private val stockholmZoneId = ZoneId.of("Europe/Stockholm")
+    private val hanoiZoneId = ZoneId.of("Asia/Ho_Chi_Minh")
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
 
     // Constants for weather update interval
     private val weatherUpdateIntervalMs = 30 * 60 * 1000L // 30 minutes in milliseconds
+
+    // Constants for time update interval
+    private val timeUpdateIntervalMs = 1000L // 1 second in milliseconds
 
     init {
         // Initial fetch of weather data
@@ -72,6 +100,37 @@ class TranslatorViewModel(
 
         // Start periodic weather updates
         startPeriodicWeatherUpdates()
+
+        // Start continuous time updates
+        startContinuousTimeUpdates()
+    }
+
+    /**
+     * Starts continuous updates of the local time every second
+     */
+    private fun startContinuousTimeUpdates() {
+        // Update time immediately
+        updateCurrentLocalTime()
+
+        coroutineScope.launch {
+            while (true) {
+                delay(timeUpdateIntervalMs)
+                updateCurrentLocalTime()
+            }
+        }
+    }
+
+    /**
+     * Updates all local times for each city
+     */
+    private fun updateCurrentLocalTime() {
+        // Update time for each city with its specific timezone
+        londonLocalTime = LocalTime.now(londonZoneId).format(timeFormatter)
+        stockholmLocalTime = LocalTime.now(stockholmZoneId).format(timeFormatter)
+        hanoiLocalTime = LocalTime.now(hanoiZoneId).format(timeFormatter)
+
+        // Keep the current local time updated for backward compatibility
+        currentLocalTime = LocalTime.now().format(timeFormatter)
     }
 
     /**
