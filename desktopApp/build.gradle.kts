@@ -15,6 +15,7 @@ val langchain4jVersion = "1.0.0-rc1"
 val kotlinxCoroutinesVersion = "1.8.0"
 val kotlinxSerializationVersion = "1.6.3"
 val koinVersion = "4.0.4"
+val ktorVersion = "2.3.9"
 
 repositories {
     mavenCentral()
@@ -46,6 +47,12 @@ dependencies {
     // Logging
     implementation("org.slf4j:slf4j-api:2.0.12")
     implementation("ch.qos.logback:logback-classic:1.5.3")
+
+    // Ktor HTTP Client
+    implementation("io.ktor:ktor-client-core:$ktorVersion")
+    implementation("io.ktor:ktor-client-cio:$ktorVersion")
+    implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
 }
 
 compose.desktop {

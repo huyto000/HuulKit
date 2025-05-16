@@ -5,14 +5,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.huulkit.ai.Language
 import com.example.huulkit.ai.TranslationService
+import com.example.huulkit.weather.City
+import com.example.huulkit.weather.WeatherInfo
+import com.example.huulkit.weather.WeatherService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 /**
  * ViewModel for translator operations
  */
-class TranslatorViewModel {
+class TranslatorViewModel(
+    private val weatherService: WeatherService
+) {
     // UI state
     var englishText by mutableStateOf("")
         private set
@@ -37,7 +43,90 @@ class TranslatorViewModel {
     var focusedLanguage by mutableStateOf<Language?>(null)
 //        private set
 
+    // Weather data
+    var londonWeather by mutableStateOf(WeatherInfo())
+        private set
+
+    var stockholmWeather by mutableStateOf(WeatherInfo())
+        private set
+
+    var hanoiWeather by mutableStateOf(WeatherInfo())
+        private set
+
+    // Weather loading state
+    var isWeatherLoading by mutableStateOf(false)
+        private set
+
+    // Error state for weather API key
+    var weatherApiKeyError by mutableStateOf(false)
+        private set
+
     private val coroutineScope = CoroutineScope(Dispatchers.Main)
+
+    // Constants for weather update interval
+    private val weatherUpdateIntervalMs = 30 * 60 * 1000L // 30 minutes in milliseconds
+
+    init {
+        // Initial fetch of weather data
+        fetchWeatherData()
+
+        // Start periodic weather updates
+        startPeriodicWeatherUpdates()
+    }
+
+    /**
+     * Starts periodic weather updates every 30 minutes
+     */
+    private fun startPeriodicWeatherUpdates() {
+        coroutineScope.launch {
+            while (true) {
+                delay(weatherUpdateIntervalMs)
+                fetchWeatherData()
+            }
+        }
+    }
+
+    /**
+     * Fetches weather data for all cities
+     */
+    fun fetchWeatherData() {
+        isWeatherLoading = true
+        // Reset the API key error state
+        weatherApiKeyError = false
+
+        coroutineScope.launch {
+            try {
+                // Fetch weather for London
+                weatherService.getWeatherForCity(City.LONDON).onSuccess { weather ->
+                    londonWeather = weather
+                }.onFailure { error ->
+                    if (error is IllegalStateException && 
+                        (error.message?.contains("API key is not set") == true || 
+                         error.message?.contains("You must provide correct API key") == true)) {
+                        weatherApiKeyError = true
+                    }
+                }
+
+                // Only continue if we don't have an API key error
+                if (!weatherApiKeyError) {
+                    // Fetch weather for Stockholm
+                    weatherService.getWeatherForCity(City.STOCKHOLM).onSuccess { weather ->
+                        stockholmWeather = weather
+                    }
+
+                    // Fetch weather for Hanoi
+                    weatherService.getWeatherForCity(City.HANOI).onSuccess { weather ->
+                        hanoiWeather = weather
+                    }
+                }
+            } catch (e: Exception) {
+                // Handle error
+                println("Error fetching weather data: ${e.message}")
+            } finally {
+                isWeatherLoading = false
+            }
+        }
+    }
 
     /**
      * Updates the English text

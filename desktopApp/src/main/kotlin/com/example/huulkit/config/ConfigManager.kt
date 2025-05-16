@@ -10,7 +10,8 @@ import java.nio.file.Paths
 
 @Serializable
 data class ApiConfig(
-    val geminiApiKey: String = ""
+    val geminiApiKey: String = "",
+    val weatherApiKey: String = ""
 )
 
 /**
@@ -87,4 +88,22 @@ object ConfigManager {
         saveConfig(updatedConfig)
         logger.info("Gemini API key updated successfully")
     }
-} 
+
+    // Get Weather API key
+    fun getWeatherApiKey(): String {
+        logger.debug("Getting Weather API key")
+        val apiKey = loadConfig().weatherApiKey
+        logger.debug("Weather API key retrieved, length: {}", apiKey.length)
+        return apiKey
+    }
+
+    // Update Weather API key
+    fun updateWeatherApiKey(apiKey: String) {
+        logger.info("Updating Weather API key")
+        val config = loadConfig()
+        val updatedConfig = config.copy(weatherApiKey = apiKey)
+        logger.debug("Saving updated configuration with new Weather API key")
+        saveConfig(updatedConfig)
+        logger.info("Weather API key updated successfully")
+    }
+}

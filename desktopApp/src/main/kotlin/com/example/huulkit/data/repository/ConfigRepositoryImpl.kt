@@ -23,4 +23,20 @@ class ConfigRepositoryImpl(private val configDataSource: ConfigDataSource) : Con
     override fun updateGeminiApiKey(apiKey: String) {
         configDataSource.updateGeminiApiKey(apiKey)
     }
+
+    /**
+     * Get the Weather API key
+     * @return The Weather API key as a string
+     */
+    override fun getWeatherApiKey(): String {
+        return configDataSource.getWeatherApiKey()
+    }
+
+    /**
+     * Update the Weather API key
+     * @param apiKey The new Weather API key
+     */
+    override fun updateWeatherApiKey(apiKey: String) {
+        configDataSource.updateWeatherApiKey(apiKey)
+    }
 }

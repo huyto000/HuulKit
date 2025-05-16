@@ -27,22 +27,32 @@ fun ConfigDialog(
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        "Configure Gemini API Key",
+                        "Configure API Keys",
                         style = MaterialTheme.typography.h6
                     )
-                    
+
                     Spacer(Modifier.height(8.dp))
-                    
+
                     OutlinedTextField(
-                        value = configViewModel.apiKeyInput,
-                        onValueChange = { configViewModel.updateApiKeyInput(it) },
+                        value = configViewModel.geminiApiKeyInput,
+                        onValueChange = { configViewModel.updateGeminiApiKeyInput(it) },
                         label = { Text("Gemini API Key") },
                         modifier = Modifier.fillMaxWidth(),
                         singleLine = true
                     )
-                    
+
+                    Spacer(Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = configViewModel.weatherApiKeyInput,
+                        onValueChange = { configViewModel.updateWeatherApiKeyInput(it) },
+                        label = { Text("Weather API Key") },
+                        modifier = Modifier.fillMaxWidth(),
+                        singleLine = true
+                    )
+
                     Spacer(Modifier.height(16.dp))
-                    
+
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.End
@@ -55,11 +65,11 @@ fun ConfigDialog(
                         ) {
                             Text("Cancel")
                         }
-                        
+
                         Spacer(Modifier.width(8.dp))
-                        
+
                         Button(
-                            onClick = { configViewModel.saveApiKey() },
+                            onClick = { configViewModel.saveApiKeys() },
                             colors = ButtonDefaults.buttonColors(
                                 backgroundColor = HuulkitBlue
                             )

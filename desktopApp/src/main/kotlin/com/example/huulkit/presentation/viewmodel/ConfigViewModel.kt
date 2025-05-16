@@ -4,56 +4,73 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.example.huulkit.domain.usecase.GetGeminiApiKeyUseCase
+import com.example.huulkit.domain.usecase.GetWeatherApiKeyUseCase
 import com.example.huulkit.domain.usecase.UpdateGeminiApiKeyUseCase
+import com.example.huulkit.domain.usecase.UpdateWeatherApiKeyUseCase
 
 /**
  * ViewModel for configuration operations
  */
 class ConfigViewModel(
     private val getGeminiApiKeyUseCase: GetGeminiApiKeyUseCase,
-    private val updateGeminiApiKeyUseCase: UpdateGeminiApiKeyUseCase
+    private val updateGeminiApiKeyUseCase: UpdateGeminiApiKeyUseCase,
+    private val getWeatherApiKeyUseCase: GetWeatherApiKeyUseCase,
+    private val updateWeatherApiKeyUseCase: UpdateWeatherApiKeyUseCase
 ) {
     // UI state
-    var apiKeyInput by mutableStateOf("")
+    var geminiApiKeyInput by mutableStateOf("")
         private set
-    
+
+    var weatherApiKeyInput by mutableStateOf("")
+        private set
+
     var showApiKeyDialog by mutableStateOf(false)
         private set
-    
+
     /**
-     * Initializes the view model by loading the current API key
+     * Initializes the view model by loading the current API keys
      */
     fun initialize() {
-        apiKeyInput = getGeminiApiKeyUseCase()
+        geminiApiKeyInput = getGeminiApiKeyUseCase()
+        weatherApiKeyInput = getWeatherApiKeyUseCase()
     }
-    
+
     /**
-     * Updates the API key input
+     * Updates the Gemini API key input
      */
-    fun updateApiKeyInput(apiKey: String) {
-        apiKeyInput = apiKey
+    fun updateGeminiApiKeyInput(apiKey: String) {
+        geminiApiKeyInput = apiKey
     }
-    
+
+    /**
+     * Updates the Weather API key input
+     */
+    fun updateWeatherApiKeyInput(apiKey: String) {
+        weatherApiKeyInput = apiKey
+    }
+
     /**
      * Shows the API key dialog
      */
     fun showDialog() {
-        apiKeyInput = getGeminiApiKeyUseCase()
+        geminiApiKeyInput = getGeminiApiKeyUseCase()
+        weatherApiKeyInput = getWeatherApiKeyUseCase()
         showApiKeyDialog = true
     }
-    
+
     /**
      * Hides the API key dialog
      */
     fun hideDialog() {
         showApiKeyDialog = false
     }
-    
+
     /**
-     * Saves the API key
+     * Saves the API keys
      */
-    fun saveApiKey() {
-        updateGeminiApiKeyUseCase(apiKeyInput)
+    fun saveApiKeys() {
+        updateGeminiApiKeyUseCase(geminiApiKeyInput)
+        updateWeatherApiKeyUseCase(weatherApiKeyInput)
         showApiKeyDialog = false
     }
 }
