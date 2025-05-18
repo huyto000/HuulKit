@@ -64,6 +64,7 @@ compose.desktop {
             packageVersion = "1.0.0"
             // Set application icon
             windows {
+                modules("java.naming", "java.net.http")
                 iconFile.set(project.file("src/main/resources/icon.png"))
             }
         }
