@@ -1,6 +1,7 @@
 package com.example.huulkit.di
 
 import com.example.huulkit.ai.GeminiService
+import com.example.huulkit.ai.TranslationService
 import com.example.huulkit.data.repository.ConfigRepositoryImpl
 import com.example.huulkit.data.repository.TextRefinementRepositoryImpl
 import com.example.huulkit.data.source.ConfigDataSource
@@ -52,6 +53,7 @@ val appModule = module {
 
     // Services - depends on GoogleAiGeminiChatModel
     single { GeminiService() }
+    single { TranslationService() }
 
     // Weather Service
     single { WeatherService(get()) }
@@ -69,5 +71,5 @@ val appModule = module {
     single { MainViewModel() }
     single { ConfigViewModel(get(), get(), get(), get()) }
     single { TextRefinementViewModel(get(), get()) }
-    single { TranslatorViewModel(get()) }
+    single { TranslatorViewModel(get(), get()) }
 }

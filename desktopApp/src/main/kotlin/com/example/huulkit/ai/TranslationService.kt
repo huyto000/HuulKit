@@ -8,7 +8,10 @@ import dev.langchain4j.service.UserMessage
 import dev.langchain4j.service.V
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.slf4j.LoggerFactory
+import kotlin.getValue
 
 /**
  * Enum representing supported languages for translation
@@ -22,7 +25,8 @@ enum class Language(val displayName: String) {
 /**
  * Service for translating text between languages using Google's Gemini model
  */
-object TranslationService {
+class TranslationService : KoinComponent {
+    private val model: GoogleAiGeminiChatModel by inject()
     private val logger = LoggerFactory.getLogger(TranslationService::class.java)
 
     /**
@@ -62,14 +66,6 @@ object TranslationService {
                 logger.debug("Text is blank, returning empty result")
                 return@withContext Result.success("")
             }
-
-            logger.debug("Initializing Gemini model for translation")
-            val apiKey = ConfigManager.getGeminiApiKey()
-            val model = GoogleAiGeminiChatModel.builder()
-                .apiKey(apiKey)
-                .modelName("gemini-2.0-flash")
-                .temperature(1.0) // Lower temperature for more accurate translations
-                .build()
 
             logger.debug("Creating translator with Gemini model")
             val translator = AiServices.builder(TextTranslator::class.java)

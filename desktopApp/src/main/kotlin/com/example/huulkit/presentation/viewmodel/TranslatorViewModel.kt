@@ -20,7 +20,8 @@ import java.time.format.DateTimeFormatter
  * ViewModel for translator operations
  */
 class TranslatorViewModel(
-    private val weatherService: WeatherService
+    private val weatherService: WeatherService,
+    private val translationService: TranslationService
 ) {
     // UI state
     var englishText by mutableStateOf("")
@@ -258,7 +259,7 @@ class TranslatorViewModel(
         if (sourceText.isBlank()) return
 
         // Get all target languages (all languages except the source)
-        val targetLanguages = Language.values().filter { it != sourceLanguage }
+        val targetLanguages = Language.entries.filter { it != sourceLanguage }
 
         // Use AtomicInteger for thread-safe counting
         val remainingTranslations = java.util.concurrent.atomic.AtomicInteger(targetLanguages.size)
@@ -270,7 +271,7 @@ class TranslatorViewModel(
 
             coroutineScope.launch {
                 try {
-                    val result = TranslationService.translateText(
+                    val result = translationService.translateText(
                         sourceText,
                         sourceLanguage,
                         targetLanguage

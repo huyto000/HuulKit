@@ -1,48 +1,38 @@
 package com.example.huulkit.presentation.ui.components
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.VerticalScrollbar
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.rememberScrollbarAdapter
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.painter.BitmapPainter
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.toComposeImageBitmap
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.request.*
-import io.ktor.client.statement.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-import org.jetbrains.skia.Image as SkiaImage
-import java.io.ByteArrayInputStream
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.BitmapPainter
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.graphics.toComposeImageBitmap
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.huulkit.ai.Language
 import com.example.huulkit.presentation.theme.HuulkitBlue
 import com.example.huulkit.presentation.viewmodel.TranslatorViewModel
+import io.ktor.client.*
+import io.ktor.client.engine.cio.*
+import io.ktor.client.request.*
+import io.ktor.client.statement.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.awt.Toolkit
 import java.awt.datatransfer.StringSelection
+import java.io.ByteArrayInputStream
+import org.jetbrains.skia.Image as SkiaImage
 
 /**
  * Loads an image from a URL and returns a Painter and loading state
@@ -62,7 +52,6 @@ fun rememberImagePainter(url: String): Pair<Painter, Boolean> {
                 client.close()
 
                 val bitmap = withContext(Dispatchers.Default) {
-                    val inputStream = ByteArrayInputStream(bytes)
                     val skiaImage = SkiaImage.makeFromEncoded(bytes)
                     skiaImage.toComposeImageBitmap()
                 }

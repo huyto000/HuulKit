@@ -1,8 +1,5 @@
 package com.example.huulkit.ai
 
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
-
 /**
  * Data class to encapsulate refinement options
  */
