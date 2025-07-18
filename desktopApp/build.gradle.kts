@@ -3,14 +3,14 @@ import org.jetbrains.compose.desktop.application.dsl.TargetFormat
 // Hardcoded versions to avoid property reference issues
 plugins {
     kotlin("jvm") version "2.0.0"
-    id("org.jetbrains.compose") version "1.6.10"
+    id("org.jetbrains.compose") version "1.8.2"
     id("org.jetbrains.kotlin.plugin.compose") version "2.0.0" // Required for Kotlin 2.0 with Compose
     kotlin("plugin.serialization") version "2.0.0" // For kotlinx.serialization
 }
 
 // Hardcoded versions directly (avoid property reference issues)
 val kotlinVersion = "2.0.0"
-val composeVersion = "1.6.10"
+val composeVersion = "1.8.2"
 val langchain4jVersion = "1.0.0-rc1"
 val kotlinxCoroutinesVersion = "1.8.0"
 val kotlinxSerializationVersion = "1.6.3"
@@ -53,6 +53,10 @@ dependencies {
     implementation("io.ktor:ktor-client-cio:$ktorVersion")
     implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
     implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+
+    // Navigation Compose
+    implementation("org.jetbrains.androidx.navigation:navigation-compose:2.9.0-beta03")
+    implementation("org.jetbrains.compose.material:material-icons-extended:1.7.2")
 }
 
 compose.desktop {

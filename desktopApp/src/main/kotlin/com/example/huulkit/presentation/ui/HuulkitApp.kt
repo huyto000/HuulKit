@@ -5,13 +5,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import com.example.huulkit.presentation.theme.HuulkitTheme
 import com.example.huulkit.presentation.ui.components.ConfigDialog
-import com.example.huulkit.presentation.ui.components.MouthHelperScreen
-import com.example.huulkit.presentation.ui.components.MouthTranslatorScreen
 import com.example.huulkit.presentation.ui.components.NavigationSidebar
 import com.example.huulkit.presentation.viewmodel.ConfigViewModel
 import com.example.huulkit.presentation.viewmodel.MainViewModel
 import com.example.huulkit.presentation.viewmodel.TextRefinementViewModel
 import com.example.huulkit.presentation.viewmodel.TranslatorViewModel
+import com.example.huulkit.presentation.navigation.HuulkitNavHost
 import org.koin.compose.koinInject
 
 /**
@@ -36,26 +35,22 @@ fun HuulkitApp() {
             NavigationSidebar(
                 selectedTab = mainViewModel.selectedTab,
                 onTabSelected = { mainViewModel.updateSelectedTab(it) },
-                configViewModel = configViewModel
+                configViewModel = configViewModel,
+                navController = mainViewModel.navController
             )
 
-            // Main content area
+            // Main content area using the navigation system
             Box(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
             ) {
-                when (mainViewModel.selectedTab) {
-                    // Mouth helper tab
-                    0 -> {
-                        MouthHelperScreen(viewModel = textRefinementViewModel)
-                    }
-
-                    // Mouth translator tab
-                    1 -> {
-                        MouthTranslatorScreen(viewModel = translatorViewModel)
-                    }
-                }
+                HuulkitNavHost(
+                    navController = mainViewModel.navController,
+                    textRefinementViewModel = textRefinementViewModel,
+                    translatorViewModel = translatorViewModel,
+                    modifier = Modifier.fillMaxSize()
+                )
             }
         }
 

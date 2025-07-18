@@ -16,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.huulkit.presentation.navigation.HuulkitDestinations
+import com.example.huulkit.presentation.navigation.HuulkitNavController
 import com.example.huulkit.presentation.viewmodel.ConfigViewModel
 
 /**
@@ -26,7 +28,8 @@ fun NavigationSidebar(
     selectedTab: Int,
     onTabSelected: (Int) -> Unit,
     configViewModel: ConfigViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: HuulkitNavController? = null
 ) {
     Column(
         modifier = modifier
@@ -49,25 +52,42 @@ fun NavigationSidebar(
                 modifier = Modifier.size(96.dp)
             )
         }
-        
+
         Spacer(modifier = Modifier.height(24.dp))
-        
+
         // Mouth helper tab
-        NavigationTab(
-            title = "Mouth helper",
-            selected = selectedTab == 0,
-            onClick = { onTabSelected(0) }
-        )
-        
-        // Mouth translator tab
-        NavigationTab(
-            title = "Mouth translator",
-            selected = selectedTab == 1,
-            onClick = { onTabSelected(1) }
-        )
-        
+        if (navController != null) {
+            // Use navigation routes
+            NavigationTab(
+                title = "Mouth helper",
+                selected = navController.currentRoute == HuulkitDestinations.MOUTH_HELPER_ROUTE,
+                onClick = { navController.navigate(HuulkitDestinations.MOUTH_HELPER_ROUTE) }
+            )
+
+            // Mouth translator tab
+            NavigationTab(
+                title = "Mouth translator",
+                selected = navController.currentRoute == HuulkitDestinations.MOUTH_TRANSLATOR_ROUTE,
+                onClick = { navController.navigate(HuulkitDestinations.MOUTH_TRANSLATOR_ROUTE) }
+            )
+        } else {
+            // Fallback to legacy tab selection
+            NavigationTab(
+                title = "Mouth helper",
+                selected = selectedTab == 0,
+                onClick = { onTabSelected(0) }
+            )
+
+            // Mouth translator tab
+            NavigationTab(
+                title = "Mouth translator",
+                selected = selectedTab == 1,
+                onClick = { onTabSelected(1) }
+            )
+        }
+
         Spacer(modifier = Modifier.weight(1f))
-        
+
         // Settings button
         IconButton(
             onClick = { configViewModel.showDialog() },
@@ -114,7 +134,7 @@ private fun NavigationTab(
         } else {
             Spacer(modifier = Modifier.width(16.dp))
         }
-        
+
         Text(
             title,
             color = Color.White,
