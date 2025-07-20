@@ -11,6 +11,10 @@ import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Healing
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -21,6 +25,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.huulkit.presentation.ui.Helper
 import com.example.huulkit.presentation.ui.Translator
 import com.example.huulkit.presentation.viewmodel.ConfigViewModel
@@ -30,11 +35,28 @@ import com.example.huulkit.presentation.viewmodel.ConfigViewModel
  */
 @Composable
 fun NavigationSidebar(
-    selectedTab: Int,
+    selectedTab: Int = 0,
     configViewModel: ConfigViewModel,
     modifier: Modifier = Modifier,
     navController: NavHostController? = null
 ) {
+    // Manage selected tab state internally
+    val (currentTab, setCurrentTab) = remember { mutableStateOf(selectedTab) }
+
+    // Observe navigation changes and update selected tab
+    if (navController != null) {
+        val navBackStackEntry by navController.currentBackStackEntryAsState()
+        val currentRoute = navBackStackEntry?.destination?.route
+
+        // Update selected tab based on current route
+        LaunchedEffect(currentRoute) {
+            when (currentRoute) {
+                Helper.toString() -> setCurrentTab(0)
+                Translator.toString() -> setCurrentTab(1)
+            }
+        }
+    }
+
     Column(
         modifier = modifier
             .width(200.dp)
@@ -62,16 +84,22 @@ fun NavigationSidebar(
         NavigationTab(
             title = "Mouth helper",
             icon = Icons.Filled.Healing,
-            selected = selectedTab == 0,
-            onClick = { navController?.navigate(Helper) }
+            selected = currentTab == 0,
+            onClick = { 
+                setCurrentTab(0)
+                navController?.navigate(Helper) 
+            }
         )
 
         // Mouth translator tab
         NavigationTab(
             title = "Mouth translator",
             icon = Icons.Filled.Translate,
-            selected = selectedTab == 1,
-            onClick = { navController?.navigate(Translator) }
+            selected = currentTab == 1,
+            onClick = { 
+                setCurrentTab(1)
+                navController?.navigate(Translator) 
+            }
         )
 
         Spacer(modifier = Modifier.weight(1f))

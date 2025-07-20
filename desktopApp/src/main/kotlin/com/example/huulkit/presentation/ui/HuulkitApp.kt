@@ -35,12 +35,6 @@ fun HuulkitApp() {
 
     val navController = rememberNavController()
 
-    fun getSelectedTab() =  when (navController.currentDestination) {
-           Helper -> 0
-           Translator -> 1
-           else -> 0
-        }
-
     // Initialize the config view model
     LaunchedEffect(Unit) {
         configViewModel.initialize()
@@ -50,7 +44,6 @@ fun HuulkitApp() {
         Row(modifier = Modifier.fillMaxSize()) {
             // Left sidebar with tabs
             NavigationSidebar(
-                selectedTab = getSelectedTab(),
                 configViewModel = configViewModel,
                 navController = navController
             )
@@ -81,4 +74,3 @@ fun HuulkitApp() {
 object Helper
 @Serializable
 object Translator
-
