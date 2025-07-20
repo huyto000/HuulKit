@@ -17,7 +17,7 @@ import com.example.huulkit.domain.usecase.RefineTextUseCase
 import com.example.huulkit.domain.usecase.UpdateGeminiApiKeyUseCase
 import com.example.huulkit.domain.usecase.UpdateWeatherApiKeyUseCase
 import com.example.huulkit.presentation.viewmodel.ConfigViewModel
-import com.example.huulkit.presentation.viewmodel.MainViewModel
+//import com.example.huulkit.presentation.viewmodel.MainViewModel
 import com.example.huulkit.presentation.viewmodel.TextRefinementViewModel
 import com.example.huulkit.presentation.viewmodel.TranslatorViewModel
 import dev.langchain4j.model.googleai.GoogleAiGeminiChatModel
@@ -68,7 +68,7 @@ val appModule = module {
     single { RefineTextUseCase(get()) }
 
     // ViewModels
-    single { MainViewModel() }
+//    single { MainViewModel() }
     single { ConfigViewModel(get(), get(), get(), get()) }
     single { TextRefinementViewModel(get(), get()) }
     single { TranslatorViewModel(get(), get()) }

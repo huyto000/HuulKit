@@ -8,16 +8,21 @@ import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Healing
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.example.huulkit.presentation.navigation.HuulkitDestinations
-import com.example.huulkit.presentation.navigation.HuulkitNavController
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import com.example.huulkit.presentation.ui.Helper
+import com.example.huulkit.presentation.ui.Translator
 import com.example.huulkit.presentation.viewmodel.ConfigViewModel
 
 /**
@@ -26,10 +31,9 @@ import com.example.huulkit.presentation.viewmodel.ConfigViewModel
 @Composable
 fun NavigationSidebar(
     selectedTab: Int,
-    onTabSelected: (Int) -> Unit,
     configViewModel: ConfigViewModel,
     modifier: Modifier = Modifier,
-    navController: HuulkitNavController? = null
+    navController: NavHostController? = null
 ) {
     Column(
         modifier = modifier
@@ -55,36 +59,20 @@ fun NavigationSidebar(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Mouth helper tab
-        if (navController != null) {
-            // Use navigation routes
-            NavigationTab(
-                title = "Mouth helper",
-                selected = navController.currentRoute == HuulkitDestinations.MOUTH_HELPER_ROUTE,
-                onClick = { navController.navigate(HuulkitDestinations.MOUTH_HELPER_ROUTE) }
-            )
+        NavigationTab(
+            title = "Mouth helper",
+            icon = Icons.Filled.Healing,
+            selected = selectedTab == 0,
+            onClick = { navController?.navigate(Helper) }
+        )
 
-            // Mouth translator tab
-            NavigationTab(
-                title = "Mouth translator",
-                selected = navController.currentRoute == HuulkitDestinations.MOUTH_TRANSLATOR_ROUTE,
-                onClick = { navController.navigate(HuulkitDestinations.MOUTH_TRANSLATOR_ROUTE) }
-            )
-        } else {
-            // Fallback to legacy tab selection
-            NavigationTab(
-                title = "Mouth helper",
-                selected = selectedTab == 0,
-                onClick = { onTabSelected(0) }
-            )
-
-            // Mouth translator tab
-            NavigationTab(
-                title = "Mouth translator",
-                selected = selectedTab == 1,
-                onClick = { onTabSelected(1) }
-            )
-        }
+        // Mouth translator tab
+        NavigationTab(
+            title = "Mouth translator",
+            icon = Icons.Filled.Translate,
+            selected = selectedTab == 1,
+            onClick = { navController?.navigate(Translator) }
+        )
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -108,13 +96,14 @@ fun NavigationSidebar(
 @Composable
 private fun NavigationTab(
     title: String,
+    icon: ImageVector,
     selected: Boolean,
     onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp)
+            .height(56.dp)
             .selectable(
                 selected = selected,
                 onClick = onClick,
@@ -127,13 +116,22 @@ private fun NavigationTab(
             Box(
                 modifier = Modifier
                     .width(4.dp)
-                    .height(24.dp)
+                    .height(32.dp)
                     .background(Color.White)
             )
             Spacer(modifier = Modifier.width(12.dp))
         } else {
             Spacer(modifier = Modifier.width(16.dp))
         }
+
+        Icon(
+            imageVector = icon,
+            contentDescription = title,
+            tint = Color.White,
+            modifier = Modifier.size(24.dp)
+        )
+
+        Spacer(modifier = Modifier.width(12.dp))
 
         Text(
             title,
