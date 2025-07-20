@@ -32,21 +32,22 @@ fun MouthHelperScreen(
             style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold
         )
-        
+
         OutlinedTextField(
             value = viewModel.inputText,
             onValueChange = { viewModel.updateInputText(it) },
             label = { Text("Original Sentence") },
-            modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp, max = 100.dp)
+            modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp),
+            maxLines = Int.MAX_VALUE
         )
-        
+
         Text(
             "Refinement Options:", 
             style = MaterialTheme.typography.subtitle1,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 8.dp)
         )
-        
+
         // Refinement options in a responsive grid using standard Row and Column layout
         Column(
             modifier = Modifier.fillMaxWidth(),
@@ -97,7 +98,7 @@ fun MouthHelperScreen(
                 )
             }
         }
-        
+
         // Error message
         viewModel.errorState?.let { error ->
             Text(
@@ -107,7 +108,7 @@ fun MouthHelperScreen(
                 modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
             )
         }
-        
+
         // Refine button
         Button(
             onClick = { viewModel.refineText() },
@@ -129,22 +130,23 @@ fun MouthHelperScreen(
                 Text("Refine Sentence")
             }
         }
-        
+
         Text(
             "Refined Sentence:", 
             style = MaterialTheme.typography.h6,
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 8.dp)
         )
-        
+
         OutlinedTextField(
             value = viewModel.outputText,
             onValueChange = { /* Read-only */ },
             label = { Text("Output") },
             readOnly = true,
-            modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp, max = 100.dp)
+            modifier = Modifier.fillMaxWidth().heightIn(min = 80.dp),
+            maxLines = Int.MAX_VALUE
         )
-        
+
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End

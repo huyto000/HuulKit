@@ -220,13 +220,14 @@ fun MouthTranslatorScreen(
                             enabled = !viewModel.isEnglishLoading,
                             modifier = Modifier
                                 .weight(1f)
-                                .heightIn(min = 100.dp, max = 150.dp)
+                                .heightIn(min = 100.dp)
                                 .focusRequester(englishFocusRequester)
                                 .onFocusChanged { focusState ->
                                     if (focusState.isFocused) {
                                         viewModel.updateFocusedLanguage(Language.ENGLISH)
                                     }
-                                }
+                                },
+                            maxLines = Int.MAX_VALUE
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
@@ -345,13 +346,14 @@ fun MouthTranslatorScreen(
                             enabled = !viewModel.isSwedishLoading,
                             modifier = Modifier
                                 .weight(1f)
-                                .heightIn(min = 100.dp, max = 150.dp)
+                                .heightIn(min = 100.dp)
                                 .focusRequester(swedishFocusRequester)
                                 .onFocusChanged { focusState ->
                                     if (focusState.isFocused) {
                                         viewModel.updateFocusedLanguage(Language.SWEDISH)
                                     }
-                                }
+                                },
+                            maxLines = Int.MAX_VALUE
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
@@ -470,13 +472,14 @@ fun MouthTranslatorScreen(
                             enabled = !viewModel.isVietnameseLoading,
                             modifier = Modifier
                                 .weight(1f)
-                                .heightIn(min = 100.dp, max = 150.dp)
+                                .heightIn(min = 100.dp)
                                 .focusRequester(vietnameseFocusRequester)
                                 .onFocusChanged { focusState ->
                                     if (focusState.isFocused) {
                                         viewModel.updateFocusedLanguage(Language.VIETNAMESE)
                                     }
-                                }
+                                },
+                            maxLines = Int.MAX_VALUE
                         )
 
                         Spacer(modifier = Modifier.width(8.dp))
